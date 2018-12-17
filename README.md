@@ -45,7 +45,7 @@ S.T.A.R. is written using a few public libraries which do a lot of audio process
 
 Downloading Python 2.7
 ------------------
-We recommend using the link: [Python 2.7](https://www.python.org/download/releases/2.7/) and downloading the package from one of the links on the official page. You can install this program anywhere on your computer, yet for the further steps please make note of where you saved this package. (For example it could be saved in C:\Program Files\Python27\)
+The primary language in which S.T.A.R. is written is Python. It was written using Python 2.7 and it is recommended that this version is the one used to run it. We recommend using the link: [Python 2.7](https://www.python.org/download/releases/2.7/) and downloading the package from one of the links on the official page. You can install this program anywhere on your computer, yet for the further steps please make note of where you saved this package. (For example it could be saved in C:\Program Files\Python27\)
 
 
 
