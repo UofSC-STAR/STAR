@@ -2,9 +2,9 @@
 
 S.T.A.R. is a user friendly interface which allows an Instructor to retrieve analytics from recorded lectures. The current analytics that are calculated are:
 
-#Average Wait Time
+- Average Wait Time
 
-#Average time give for Clarification
+- Average time given for Clarification Pauses
 
 ## Getting Started
 
