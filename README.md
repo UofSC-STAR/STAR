@@ -1,4 +1,5 @@
 # S.T.A.R. (Speech-to-Text Analytic Resource)
+ ===================
 
 One Paragraph of project description goes here
 
