@@ -2,7 +2,7 @@
 
 S.T.A.R. is a user friendly interface which allows an Instructor to retrieve analytics from recorded lectures. 
 
-The current analytics that are calculated are:
+The current analytics that are calculated by S.T.A.R. are:
 
 - Average Wait Time
 
