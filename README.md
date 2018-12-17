@@ -4,7 +4,7 @@ S.T.A.R. is a user friendly interface which utilizes the research A.P.I., [Sphin
 
 ## Getting Started
 
-These instructions will help you get a version of our programup and running on your local machine for basic use, development or testing purposes. 
+These instructions will help you get a version of our S.T.A.R. up and running on your local machine for basic use, development or testing purposes. 
 
 Supported Platforms
 -------------------
