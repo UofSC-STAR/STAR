@@ -25,7 +25,7 @@ Supported Platforms
 
 
 
-Install on Windows
+Installing on Windows
 ------------------
 S.T.A.R. is written using a few public libraries which do a lot of audio processing and in the advanced settings uses a CMU website to load a language model. To download all of these dependicies one only needs a passing familiarity with the use of command line (DOS). 
 
