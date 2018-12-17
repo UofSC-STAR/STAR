@@ -1,6 +1,10 @@
 # S.T.A.R. (Speech-to-Text Analytic Resource)
 
-S.T.A.R. is a user friendly interface which utilizes the research A.P.I., [Sphinx](https://cmusphinx.github.io/), made available by Carnegie Mellon University and the programming language [Python](https://www.python.org/), to make available average wait time and average clarification pauses time from a recorded lecture.
+S.T.A.R. is a user friendly interface which allows an Instructor to retrieve analytics from recorded lectures. The current analytics that are calculated are:
+
+#Average Wait Time
+
+#Average time give for Clarification
 
 ## Getting Started
 
