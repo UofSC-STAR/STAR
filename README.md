@@ -8,6 +8,8 @@ The current analytics that are calculated by S.T.A.R. are:
 
 - Average time given for Clarification Pauses
 
+The way in which S.T.A.R. has been written the diligent python programmer will be able to replace the CMU Sphinx API with any of their choosing (instructions for this adaptation is given later)
+
 ## Getting Started
 
 These instructions will help you get a version of our S.T.A.R. up and running on your local machine for basic use, development or testing purposes. 
@@ -25,20 +27,25 @@ Supported Platforms
 
 Install on Windows
 ------------------
+S.T.A.R. is written using a few public libraries which do a lot of audio processing and in the advanced settings uses a CMU website to load a language model. To download all of these dependicies one will have to a passing familiarity with the use of command line (of DOS). 
+
+
 
 
 ### Dependencies
 
+- [Python 2.7](https://www.python.org/download/releases/2.7/)
 - [CMU PocketSphinx](https://github.com/cmusphinx/pocketsphinx-python)
-- [Python](https://www.python.org/downloads/)
-- [git](http://git-scm.com/downloads)
 - [pip](https://pypi.python.org/pypi/pip/)
-- [Swig](http://www.swig.org/download.html)
-- [Microsoft Visual C++ Compiler for Python 2.7](http://aka.ms/vcpython27)
 - [pydub](https://pypi.org/project/pydub/)
 - [ffmpeg](https://www.ffmpeg.org/)
 - [mechanize](https://pypi.org/project/mechanize/)
+- [Graphics Package by John Zeele](http://mcsp.wartburg.edu/zelle/python/graphics.py)
 
+
+Downloading Python 2.7
+------------------
+We recommend using the link: [Python 2.7](https://www.python.org/download/releases/2.7/) and downloading the package from one of the links on the official page. You can install this program anywhere on your computer, yet for the further steps please make note of where you saved this package. (For example it could be saved in C:\Program Files\Python27\)
 
 
 
