@@ -40,6 +40,7 @@ S.T.A.R. is written using a few public libraries which do a lot of audio process
 - [pydub](https://pypi.org/project/pydub/)
 - [ffmpeg](https://www.ffmpeg.org/)
 - [mechanize](https://pypi.org/project/mechanize/)
+- [easyGUI](https://pypi.org/project/easygui/)
 
 
 
