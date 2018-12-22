@@ -8,7 +8,9 @@ The current analytics that are calculated by S.T.A.R. are:
 
 - Average time given for Clarification Pauses
 
-The way in which S.T.A.R. has been written the diligent python programmer will be able to replace the CMU Sphinx API with any of their choosing (instructions for this adaptation is given later)
+The two main objectives of S.T.A.R. is:
+-Give the less computer savy users an easy downloadable file with an understandable and usable user interface...
+-Give the inquistive programmer the ablilty to replace the CMU Sphinx API with any of their choosing (instructions for this adaptation is given later)
 
 ## Getting Started
 
