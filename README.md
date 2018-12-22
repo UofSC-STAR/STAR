@@ -36,7 +36,6 @@ S.T.A.R. is written using a few public libraries which do a lot of audio process
 
 - [Python 2.7](https://www.python.org/download/releases/2.7/)
 - [CMU PocketSphinx](https://github.com/cmusphinx/pocketsphinx-python)
-- [pip](https://pypi.python.org/pypi/pip/)
 - [pydub](https://pypi.org/project/pydub/)
 - [ffmpeg](https://www.ffmpeg.org/)
 - [mechanize](https://pypi.org/project/mechanize/)
@@ -47,6 +46,12 @@ S.T.A.R. is written using a few public libraries which do a lot of audio process
 Downloading Python 2.7
 ------------------
 The primary language in which S.T.A.R. is written is Python. It was written using Python 2.7 and it is recommended that this version is the one used to run it. We recommend using the link: [Python 2.7](https://www.python.org/download/releases/2.7/) and downloading the package from one of the links on the official page. You can install this program anywhere on your computer, yet for the further steps please make note of where you saved this package. (For example it could be saved in C:\Program Files\Python27\)
+
+
+
+Using PIP
+------------------
+To use the further dependencies we suggest using [pip](https://pypi.python.org/pypi/pip/)
 
 
 
