@@ -32,7 +32,7 @@ S.T.A.R. is written using a few public libraries which do a lot of audio process
 
 
 
-### Dependencies
+### Dependencies/Libraries
 
 - [Python 2.7](https://www.python.org/download/releases/2.7/)
 - [CMU PocketSphinx](https://github.com/cmusphinx/pocketsphinx-python)
