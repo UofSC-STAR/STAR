@@ -20,7 +20,7 @@ With these goals in mind we have created two versions of the S.T.A.R. program:
 
 - S.T.A.R. Python
 
-The Python version is written using a few public  of libraries which makes it's installation more taxing on the educator that is less familiar with programing, while the version written with Java has only the dependicy of java and as such can be used across platforms with no programming understanding, yet this makes the .
+The Python version is written using a few public  of libraries which makes it's installation more taxing on the educator that is less familiar with programing, while the version written with Java has only the dependicy of java and as such can be used across platforms with no programming understanding, yet this makes the program a lot less versitile with a lot less features.
 
 ## Getting Started
 
