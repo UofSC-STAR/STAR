@@ -39,6 +39,8 @@ Installing (JAVA VERSION) on Windows
 To install the Java version of S.T.A.R. one only needs to download the .jar file from the folder with the correct operating system.
 For example if you are using a Windows machine you need to open the Java_Windows folder from this GIT-repository and download the .jar file.
 
+Besides java the program that you hava a folder in your directory C:\ named temp (all lowercase) so you will need to create this folder yourself.
+
 
 
 
