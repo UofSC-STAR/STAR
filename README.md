@@ -80,3 +80,7 @@ Once all of the dependicies are downloaded all you need to do is download the fo
 
 
 
+# Using the Program
+
+For a manual for the use of the program may be found [here](https://www.sc.edu/about/offices_and_divisions/cte/about/news/2018/gta_teaching_resource_grant_2018.php)
+
