@@ -36,10 +36,10 @@ Supported Platforms
 
 Installing (JAVA VERSION) on Windows
 ------------------ 
-To install the Java version of S.T.A.R. one only needs to download the .jar file from the folder with the correct operating system.
-For example if you are using a Windows machine you need to open the Java_Windows folder from this GIT-repository and download the .jar file.
+To install the Java version of S.T.A.R. one only needs to download the .jar file from [here](https://www.sc.edu/about/offices_and_divisions/cte/about/news/2018/gta_teaching_resource_grant_2018.php) with the correct operating system.
+For example if you are using a Windows machine you need to download the STAR_Windows.jar file.
 
-Besides java the program that you hava a folder in your directory C:\ named temp (all lowercase) so you will need to create this folder yourself.
+Then once you have the program if JAVA is correctly configured on your machine you will need only double click the file to run the program.
 
 
 
@@ -71,6 +71,12 @@ The primary language in which S.T.A.R. is written is Python. It was written usin
 Using PIP
 ------------------
 To use the further dependencies we suggest using [pip](https://pypi.python.org/pypi/pip/)
+
+
+S.T.A.R. Windows
+------------------
+Once all of the dependicies are downloaded all you need to do is download the folder from this repository and put it any anywhere on your computer. From the folder you now only need to double click the file STAR.pyc
+
 
 
 
