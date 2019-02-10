@@ -7,6 +7,10 @@ from pydub.utils import make_chunks
 import mechanize
 import re
 from easygui import*
+import datetime
+
+
+
 
 
 
@@ -1031,6 +1035,763 @@ update()
 
 
 
+########################################
+######## BUILD FILES TO TRACK ##########
+########################################
+def buildtrack():
+	chdir('./bin')
+	ps1=open('tracking.txt','r')
+	fn=[]
+	dt=[]
+	wttr=[]
+	cptr=[]
+
+	cou=0
+	for line in ps1:
+		cou=cou+1
+		pss=list(line)
+		#print(pss)
+		if pss[0]!='#' and pss[0]!='\n':
+			if pss[0]=='f':
+				poo=pss[1]
+				for i in range(2,len(pss)):
+					if pss[i]!='\n':
+						poo=poo+pss[i]
+				fn.append(poo)
+
+			if pss[0]=='w':
+				poo=pss[1]
+				for i in range(2,len(pss)):
+					if pss[i]!='\n':
+						poo=poo+pss[i]
+				wttr.append(poo)
+
+			if pss[0]=='c':
+				poo=pss[1]
+				for i in range(2,len(pss)):
+					if pss[i]!='\n':
+						poo=poo+pss[i]
+				cptr.append(poo)
+
+			if pss[0]=='d':
+				poo=pss[1]
+				for i in range(2,len(pss)):
+					if pss[i]!='\n':
+						poo=poo+pss[i]
+				dt.append(poo)
+				
+	ps1.close()
+	chdir('../')
+	
+	return fn, dt, wttr,cptr
+
+
+
+########################################
+############ BUILD DATE ################
+########################################
+def builddate(dty,dtm,dtd):
+	dt=[]
+	for i in range(0,len(dty)):
+		dt.append(str(dtm[i])+'-'+str(dtd[i])+'-'+str(dty[i]))
+		
+	return dt
+
+#########################################
+#############UPDATE DATA ################
+########################################
+def updata(fn,dt,wttr,cptr):
+	chdir('./bin')
+	ps1=open('tracking.txt','w')
+	ps1.write('######## TRACKING #######'+'\n')
+	for i in range(0,len(fn)):
+		ps1.write('f'+fn[i]+'\n')
+		ps1.write('d'+dt[i]+'\n')
+		ps1.write('w'+str(wttr[i])+'\n')
+		ps1.write('c'+str(cptr[i])+'\n')
+	
+	
+	
+	
+	ps1.close()
+	chdir('../')
+
+
+
+
+#########################################
+############## Data Viewer ##############
+#########################################
+def view(title,ddt,dd):
+	winv = GraphWin(title, 600, 400)
+	winv.setBackground('white')
+	winv.setCoords(0.0,25.0,12.0,0.0)
+	
+	advset=Text(Point(6,1.3),title)
+	advset.setSize(25)
+	advset.setStyle('bold')
+	advset.setFace('courier')
+	advset.setTextColor('red')
+	advset.draw(winv)
+	
+	xaxis=Line(Point(0.5,20),Point(11.5,20))
+	xaxis.draw(winv)
+	
+	xlab=Text(Point(.7,1),'Sec')
+	xlab.draw(winv)
+	
+	yaxis=Line(Point(1,1.8),Point(1,20.5))
+	yaxis.draw(winv)
+	
+	sizedata=len(ddt)
+	
+	dtm=[]
+	dtd=[]
+	dty=[]
+	for i in range(0,len(ddt)):
+		poo=ddt[i].split('-')
+		dtm.append(int(poo[0]))
+		dtd.append(int(poo[1]))
+		dty.append(int(poo[2]))
+
+			
+	pimy1=[]
+	for i in range(0,len(dty)):
+		if dty[i] not in pimy1:
+			pimy1.append(dty[i])
+
+	pimfix=[]
+	for i in range(0,len(pimy1)):
+		pimfix.append([])
+		
+	for i in range(0,13):
+		for k in range(0,len(pimy1)):
+			pimfix[k].append([])
+			for j in range(0,32):
+				pimfix[k][i].append([])
+			
+
+			
+	for i in range(0,len(dtm)):
+		for m in range(0,13):
+			if dtm[i]==m+1:
+				for d in range(0,32):
+					if dtd[i]==d+1:
+						for y in range(0,len(pimy1)):
+							if dty[i]==pimy1[y]:
+								pimfix[y][m][d].append(i)
+
+
+
+	makesense=[]
+	for i in range(0,len(dtm)):
+		makesense.append(0)
+
+	countdrac=0
+	for y in range(0,len(pimy1)):
+		for m in range(0,13):
+			for d in range(0,32):
+				if len(pimfix[y][m][d])!=0:
+					countdrac=countdrac+1
+					for i in range(0,len(pimfix[y][m][d])):
+						makesense[pimfix[y][m][d][i]]=countdrac
+	hellno=[]
+	for i in range(0,len(makesense)):
+		if makesense[i] not in hellno:
+			hellno.append(makesense[i])
+
+	numpoints=len(hellno)
+	scalegraphx=float(float(10.5)/(numpoints-1))
+
+	hellyes=[]
+	for i in range(0,numpoints):
+		hellyes.append([])
+	
+	for i in range(0,len(makesense)):
+		hellyes[makesense[i]-1].append(i)
+
+		
+
+	
+	points=[]
+	for i in range(0,numpoints):
+	
+		if len(hellyes[i])!=1:
+			tot=0
+			#print(type(tot))
+			for j in range(0,len(hellyes[i])):
+				#print(type(hellyes[i][j]))
+				#print(hellyes[i][j])
+				tot=tot+hellyes[i][j]
+			points.append(float(tot)/len(hellyes[i]))
+		else:
+			points.append(float(dd[hellyes[i][0]]))
+
+	scaley=float(15)/max(points)			
+	for i in range(0,numpoints-1):
+		ser=Line(Point(1+i*scalegraphx,19-(points[i]*scaley)),Point(1+(i+1)*scalegraphx,19-(points[i+1]*scaley)))
+		ser.draw(winv)
+	
+	toppoint=19-(max(points)*scaley)
+	botpoint=19-(min(points)*scaley)
+	tophatL=Line(Point(1-.15,toppoint),Point(1.2,toppoint))
+	tophatL.draw(winv)
+	
+	tophatN=Text(Point(.45,toppoint),str(int(max(points))))
+	tophatN.draw(winv)
+	
+	bothatL=Line(Point(1-.15,botpoint),Point(1.2,botpoint))
+	bothatL.draw(winv)
+	
+	bothatN=Text(Point(.45,botpoint),str(int(min(points))))
+	bothatN.draw(winv)
+	
+	d1=str(dtm[hellyes[0][0]])+'-'+str(dtd[hellyes[0][0]])
+	date1=Text(Point(1,21),d1)
+	date1.draw(winv)
+	
+	d2=str(dtm[hellyes[len(hellyes)-1][0]])+'-'+str(dtd[hellyes[len(hellyes)-1][0]])
+	date2=Text(Point(11,21),d2)
+	date2.draw(winv)
+	
+	dateL=Line(Point(11,20.3),Point(11,19.6))
+	dateL.draw(winv)
+	
+	
+	#test1=Text(Point(6,6.3),scaley)
+	#test1.setSize(25)
+	#test1.draw(winv)
+	winv.getMouse()
+	
+#############################################
+################ EDIT TRACKING ############
+#############################################
+def edittracker(title,dty,dtm,dtd,fn,wttr,cptr):
+	wine = GraphWin(title, 500, 600)
+	wine.setBackground('white')
+	wine.setCoords(0.0,25.0,12.0,0.0)
+	
+	advset=Text(Point(6,1.3),title)
+	advset.setSize(25)
+	advset.setStyle('bold')
+	advset.setFace('courier')
+	advset.setTextColor('red')
+	advset.draw(wine)
+	
+	
+	sets=(len(fn)/5)+1
+	
+	tootfn=[]
+	tootdtm=[]
+	tootdty=[]
+	tootdtd=[]
+	for i in range(0,sets):
+		tootfn.append([])
+		tootdtm.append([])
+		tootdty.append([])
+		tootdtd.append([])
+		
+
+	for i in range(0,sets):
+		for j in range(0,5):
+			if i*5+j<len(fn):
+				tootfn[i].append(fn[i*5+j])
+				tootdtm[i].append(dtm[i*5+j])
+				tootdty[i].append(dty[i*5+j])
+				tootdtd[i].append(dtd[i*5+j])
+			
+		
+			
+		
+	weat=0
+
+	
+	file1=Text(Point(4,6),'')
+	file1.draw(wine)
+	file2=Text(Point(4,9),'')
+	file2.draw(wine)
+	file3=Text(Point(4,12),'')
+	file3.draw(wine)
+	file4=Text(Point(4,15),'')
+	file4.draw(wine)
+	file5=Text(Point(4,18),'')
+	file5.draw(wine)
+	
+	if len(tootfn[weat])!=0:
+		file1.setText(tootfn[weat][0])
+	if len(tootfn[weat])>1:
+		file2.setText(tootfn[weat][1])
+	if len(tootfn[weat])>2:
+		file3.setText(tootfn[weat][2])
+	if len(tootfn[weat])>3:
+		file4.setText(tootfn[weat][3])
+	if len(tootfn[weat])>4:
+		file5.setText(tootfn[weat][4])
+	
+	
+	
+	
+	if len(tootfn[weat])!=0:
+		Edtm1=Entry(Point(7,6),2)
+		Edtm1.draw(wine)
+	if len(tootfn[weat])>1:
+		Edtm2=Entry(Point(7,9),2)
+		Edtm2.draw(wine)
+	if len(tootfn[weat])>2:
+		Edtm3=Entry(Point(7,12),2)
+		Edtm3.draw(wine)
+	if len(tootfn[weat])>3:
+		Edtm4=Entry(Point(7,15),2)
+		Edtm4.draw(wine)
+	if len(tootfn[weat])>4:
+		Edtm5=Entry(Point(7,18),2)
+		Edtm5.draw(wine)
+		
+	if len(tootfn[weat])!=0:
+		Edtd1=Entry(Point(8.5,6),2)
+		Edtd1.draw(wine)
+	if len(tootfn[weat])>1:
+		Edtd2=Entry(Point(8.5,9),2)
+		Edtd2.draw(wine)
+	if len(tootfn[weat])>2:
+		Edtd3=Entry(Point(8.5,12),2)
+		Edtd3.draw(wine)
+	if len(tootfn[weat])>3:
+		Edtd4=Entry(Point(8.5,15),2)
+		Edtd4.draw(wine)
+	if len(tootfn[weat])>4:
+		Edtd5=Entry(Point(8.5,18),2)
+		Edtd5.draw(wine)
+		
+	if len(tootfn[weat])!=0:
+		Edty1=Entry(Point(10.7,6),4)
+		Edty1.draw(wine)
+	if len(tootfn[weat])>1:
+		Edty2=Entry(Point(10.7,9),4)
+		Edty2.draw(wine)
+	if len(tootfn[weat])>2:
+		Edty3=Entry(Point(10.7,12),4)
+		Edty3.draw(wine)
+	if len(tootfn[weat])>3:
+		Edty4=Entry(Point(10.7,15),4)
+		Edty4.draw(wine)
+	if len(tootfn[weat])>4:
+		Edty5=Entry(Point(10.7,18),4)
+		Edty5.draw(wine)
+		
+		
+	if len(tootfn[weat])!=0:
+		Edtm1.setText(tootdtm[weat][0])
+	if len(tootfn[weat])>1:
+		Edtm2.setText(tootdtm[weat][1])
+	if len(tootfn[weat])>2:
+		Edtm3.setText(tootdtm[weat][2])
+	if len(tootfn[weat])>3:
+		Edtm4.setText(tootdtm[weat][3])
+	if len(tootfn[weat])>4:
+		Edtm5.setText(tootdtm[weat][4])
+		
+	if len(tootfn[weat])!=0:
+		Edtd1.setText(tootdtd[weat][0])
+	if len(tootfn[weat])>1:
+		Edtd2.setText(tootdtd[weat][1])
+	if len(tootfn[weat])>2:
+		Edtd3.setText(tootdtd[weat][2])
+	if len(tootfn[weat])>3:
+		Edtd4.setText(tootdtd[weat][3])
+	if len(tootfn[weat])>4:
+		Edtd5.setText(tootdtd[weat][4])
+		
+		
+	if len(tootfn[weat])!=0:
+		Edty1.setText(tootdty[weat][0])
+	if len(tootfn[weat])>1:
+		Edty2.setText(tootdty[weat][1])
+	if len(tootfn[weat])>2:
+		Edty3.setText(tootdty[weat][2])
+	if len(tootfn[weat])>3:
+		Edty4.setText(tootdty[weat][3])
+	if len(tootfn[weat])>4:
+		Edty5.setText(tootdty[weat][4])
+		
+	
+	############ SAVE BUTTON ########################
+	exitbttn=Rectangle(Point(4.3,22.4),Point(7.8,24.3))
+	exitbttn.setFill('green1')
+	exitb=Text(Point(6,23.4),'Save Changes')
+	exitbttn.draw(wine)
+	exitb.draw(wine)
+	
+	
+	########### NEXT BUTTON #######################
+	nextbttn=Rectangle(Point(9.3,23),Point(10.8,24))
+	nextbttn.setFill('yellow')
+	nextbttn.draw(wine)
+	nexttxt=Text(Point(10.1,23.5),'Next>>')
+	nexttxt.draw(wine)
+	
+	ffn=Text(Point(4,3),'File Name')
+	ffn.draw(wine)
+	
+	fdm=Text(Point(6.9,3),'Month')
+	fdm.draw(wine)
+	
+	fdd=Text(Point(8.5,3),'Day')
+	fdd.draw(wine)
+	
+	fdy=Text(Point(10.7,3),'Year')
+	fdy.draw(wine)
+	
+	
+	chachanges=True
+	while chachanges:
+	
+		ch=wine.getMouse()
+		
+		############### Press SAVE #################
+		if 4.3<=ch.getX()<=7.8 and 22.4<=ch.getY()<=24.3:
+			if len(tootfn[weat])!=0 and 0<int(Edtm1.getText())<=12:
+				dtm[weat]=int(Edtm1.getText())
+			if len(tootfn[weat])>1 :
+				dtm[weat+1]=int(Edtm2.getText())
+			if len(tootfn[weat])>2 and 0<int(Edtm1.getText())<=12:
+				dtm[weat+2]=int(Edtm3.getText())
+			if len(tootfn[weat])>3 and 0<int(Edtm1.getText())<=12:
+				dtm[weat+3]=int(Edtm4.getText())
+			if len(tootfn[weat])>4 and 0<int(Edtm1.getText())<=12:
+				dtm[weat+4]=int(Edtm5.getText())
+				
+			if len(tootfn[weat])!=0 and 2000<int(Edty1.getText()):
+				dty[weat]=int(Edty1.getText())
+			if len(tootfn[weat])>1 and 2000<int(Edty1.getText()):
+				dty[weat+1]=int(Edty2.getText())
+			if len(tootfn[weat])>2 and 2000<int(Edty1.getText()):
+				dty[weat+2]=int(Edty3.getText())
+			if len(tootfn[weat])>3 and 2000<int(Edty1.getText()):
+				dty[weat+3]=int(Edty4.getText())
+			if len(tootfn[weat])>4 and 2000<int(Edty1.getText()):
+				dty[weat+4]=int(Edty5.getText())			
+			
+			
+			if len(tootfn[weat])!=0 and 0<int(Edtd1.getText())<=31:
+				dtd[weat]=int(Edtd1.getText())
+			if len(tootfn[weat])>1 and 0<int(Edtd1.getText())<=31:
+				dtd[weat+1]=int(Edtd2.getText())
+			if len(tootfn[weat])>2 and 0<int(Edtd1.getText())<=31:
+				dtd[weat+2]=int(Edtd3.getText())
+			if len(tootfn[weat])>3 and 0<int(Edtd1.getText())<=31:
+				dtd[weat+3]=int(Edtd4.getText())
+			if len(tootfn[weat])>4 and 0<int(Edtd1.getText())<=31:
+				dtd[weat+4]=int(Edtd5.getText())
+				
+			
+			dt=builddate(dty,dtm,dtd)
+			#also update!
+			updata(fn,dt,wttr,cptr)
+			
+	
+			
+		
+			
+
+		
+		
+		############### Press Next ##################
+		if 9.3<=ch.getX()<=10.8 and 23<=ch.getY()<=24:
+			if len(tootfn[weat])!=0 and 0<int(Edtm1.getText())<=12:
+				dtm[weat]=int(Edtm1.getText())
+			if len(tootfn[weat])>1 :
+				dtm[weat+1]=int(Edtm2.getText())
+			if len(tootfn[weat])>2 and 0<int(Edtm1.getText())<=12:
+				dtm[weat+2]=int(Edtm3.getText())
+			if len(tootfn[weat])>3 and 0<int(Edtm1.getText())<=12:
+				dtm[weat+3]=int(Edtm4.getText())
+			if len(tootfn[weat])>4 and 0<int(Edtm1.getText())<=12:
+				dtm[weat+4]=int(Edtm5.getText())
+				
+			if len(tootfn[weat])!=0 and 2000<int(Edty1.getText()):
+				dty[weat]=int(Edty1.getText())
+			if len(tootfn[weat])>1 and 2000<int(Edty1.getText()):
+				dty[weat+1]=int(Edty2.getText())
+			if len(tootfn[weat])>2 and 2000<int(Edty1.getText()):
+				dty[weat+2]=int(Edty3.getText())
+			if len(tootfn[weat])>3 and 2000<int(Edty1.getText()):
+				dty[weat+3]=int(Edty4.getText())
+			if len(tootfn[weat])>4 and 2000<int(Edty1.getText()):
+				dty[weat+4]=int(Edty5.getText())			
+			
+			
+			if len(tootfn[weat])!=0 and 0<int(Edtd1.getText())<=31:
+				dtd[weat]=int(Edtd1.getText())
+			if len(tootfn[weat])>1 and 0<int(Edtd1.getText())<=31:
+				dtd[weat+1]=int(Edtd2.getText())
+			if len(tootfn[weat])>2 and 0<int(Edtd1.getText())<=31:
+				dtd[weat+2]=int(Edtd3.getText())
+			if len(tootfn[weat])>3 and 0<int(Edtd1.getText())<=31:
+				dtd[weat+3]=int(Edtd4.getText())
+			if len(tootfn[weat])>4 and 0<int(Edtd1.getText())<=31:
+				dtd[weat+4]=int(Edtd5.getText())
+				
+			
+				
+			
+		
+			
+		
+			weat=(weat+1)%sets
+			if len(tootfn[weat])!=0:
+				Edtm1.setText(tootdtm[weat][0])
+			else:
+				Edtm1.setText('')
+			if len(tootfn[weat])>1:
+				Edtm2.setText(tootdtm[weat][1])
+			else:
+				Edtm2.setText('')
+			if len(tootfn[weat])>2:
+				Edtm3.setText(tootdtm[weat][2])
+			else:
+				Edtm3.setText('')
+			if len(tootfn[weat])>3:
+				Edtm4.setText(tootdtm[weat][3])
+			else:
+				Edtm4.setText('')
+			if len(tootfn[weat])>4:
+				Edtm5.setText(tootdtm[weat][4])
+			else:
+				Edtm5.setText('')
+		
+			if len(tootfn[weat])!=0:
+				Edtd1.setText(tootdtd[weat][0])
+			else:
+				Edtd1.setText('')
+			if len(tootfn[weat])>1:
+				Edtd2.setText(tootdtd[weat][1])
+			else:
+				Edtd2.setText('')
+			if len(tootfn[weat])>2:
+				Edtd3.setText(tootdtd[weat][2])
+			else:
+				Edtd3.setText('')
+			if len(tootfn[weat])>3:
+				Edtd4.setText(tootdtd[weat][3])
+			else:
+				Edtd4.setText('')
+			if len(tootfn[weat])>4:
+				Edtd5.setText(tootdtd[weat][4])
+			else:
+				Edtd5.setText('')
+				
+			if len(tootfn[weat])!=0:
+				Edty1.setText(tootdty[weat][0])
+			else:
+				Edty1.setText('')
+			if len(tootfn[weat])>1:
+				Edty2.setText(tootdty[weat][1])
+			else:
+				Edty2.setText('')
+			if len(tootfn[weat])>2:
+				Edty3.setText(tootdty[weat][2])
+			else:
+				Edty3.setText('')
+			if len(tootfn[weat])>3:
+				Edty4.setText(tootdty[weat][3])
+			else:
+				Edty4.setText('')
+			if len(tootfn[weat])>4:
+				Edty5.setText(tootdty[weat][4])
+			else:
+				Edty5.setText('')
+				
+			if len(tootfn[weat])!=0:
+				file1.setText(tootfn[weat][0])
+			else:
+				file1.setText('')
+			if len(tootfn[weat])>1:
+				file2.setText(tootfn[weat][1])
+			else:
+				file2.setText('')
+			if len(tootfn[weat])>2:
+				file3.setText(tootfn[weat][2])
+			else:
+				file3.setText('')
+			if len(tootfn[weat])>3:
+				file4.setText(tootfn[weat][3])
+			else:
+				file4.setText('')
+			if len(tootfn[weat])>4:
+				file5.setText(tootfn[weat][4])
+			else:
+				file5.setText('')
+			
+			
+			dt=builddate(dty,dtm,dtd)
+			#also update!
+			updata(fn,dt,wttr,cptr)
+			
+
+	
+	
+	
+
+
+
+
+
+
+##########################################################
+###################### Tracking Main #####################
+##########################################################
+
+
+#############################################
+################ Tracking Window ############
+#############################################
+
+
+
+def tracker():
+	fn, dt, wttr,cptr=buildtrack()
+
+
+	dtm=[]
+	dtd=[]
+	dty=[]
+	for i in range(0,len(dt)):
+		poo=dt[i].split('-')
+		dtm.append(int(poo[0]))
+		dtd.append(int(poo[1]))
+		dty.append(int(poo[2]))
+
+		
+	win100 = GraphWin("Data Tracking", 400, 400)
+	win100.setBackground('white')
+	win100.setCoords(0.0,25.0,12.0,0.0)
+
+
+
+
+	advset=Text(Point(6,1.3),'Data Tracking')
+	advset.setSize(25)
+	advset.setStyle('bold')
+	advset.setFace('courier')
+	advset.setTextColor('red')
+	advset.draw(win100)
+
+
+	haha=Text(Point(4.4,4.6),'View Wait Time Data:')
+	haha.setStyle('bold')
+	haha.draw(win100)
+
+
+	haha2=Text(Point(4.4,8.6),'View Clarification Pause Data:')
+	haha2.setStyle('bold')
+	haha2.draw(win100)
+
+
+
+
+	################ View CP DATA Button ################
+	cpdbutton=Text(Point(9.3,8.6),'View')
+	cpd=Rectangle(Point(9.9,9.2),Point(8.7,7.8))
+	cpd.setFill('green')
+	cpd.draw(win100)
+	cpdbutton.draw(win100)
+
+
+	################ View WT DATA Button ################
+	wtdbutton=Text(Point(9.3,4.6),'View')
+	wtd=Rectangle(Point(9.9,5.2),Point(8.7,3.8))
+	wtd.setFill('green')
+	wtd.draw(win100)
+	wtdbutton.draw(win100)
+
+
+	liner=Line(Point(0,13),Point(12,13))
+	liner.draw(win100)
+
+	liner2=Line(Point(0,12),Point(12,12))
+	liner2.draw(win100)
+
+
+
+
+	haha3=Text(Point(4.4,15.6),'Edit Saved Data:')
+	haha3.setStyle('bold')
+	haha3.draw(win100)
+
+
+	# haha4=Text(Point(4.4,19.6),'Edit Clarification Pause Data:')
+	# haha4.setStyle('bold')
+	# haha4.draw(win100)
+
+
+	################ Edit CP DATA Button ################
+	# cpdebutton=Text(Point(9.3,19.6),'Edit')
+	# cpde=Rectangle(Point(9.9,20.2),Point(8.7,18.8))
+	# cpde.setFill('red')
+	# cpde.draw(win100)
+	# cpdebutton.draw(win100)
+
+
+	################ Edit SAVED DATA Button ################
+	wtdebutton=Text(Point(9.3,15.6),'Edit')
+	wtde=Rectangle(Point(9.9,16.2),Point(8.7,14.8))
+	wtde.setFill('red')
+	wtde.draw(win100)
+	wtdebutton.draw(win100)
+
+
+
+
+
+	td=True
+	while td:
+		tool100=win100.getMouse()
+		
+		
+
+		################ Click View WT DATA Button ################
+		if 8.7<=tool100.getX()<=9.9 and 3.8<=tool100.getY()<=5.2:
+			try:
+				view("Wait Time Data",dt,wttr)
+			except:
+				pass
+				
+		
+		################ Click View CP DATA Button ################
+		if 8.7<=tool100.getX()<=9.9 and 7.8<=tool100.getY()<=9.2:
+			try:
+				view("Clarification Pause Data",dt,cptr)
+			except:
+				pass
+				
+		################ Click Edit SAVED DATA Button ################
+		if 8.7<=tool100.getX()<=9.9 and 14.8<=tool100.getY()<=16.2:
+			try:
+				edittracker("Edit Saved Data",dty,dtm,dtd,fn,wttr,cptr)
+			except:
+				pass
+				
+		################ Click Edit CP DATA Button ################
+		# if 8.7<=tool100.getX()<=9.9 and 18.8<=tool100.getY()<=20.2:
+			# try:
+				# edittracker("Clarification Pause Data",dty,dtm,dtd,fn)
+			# except:
+				# pass
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
 ######################## DECODER AND CALCULATOR #################
 
 # The Decoder Module
@@ -1044,11 +1805,17 @@ def TheGame(todecode):
 	End=[]
 	DirtyWords=[]
 	Prob=[]
+	print(str(todecode))
 	ffll=str(todecode).split('\\')
+	print(ffll)
 	a,sucka=ffll[len(ffll)-1].split('.')
+	print(sucka)
 	#chdir('./audio_files/')
-
-	myaudio = AudioSegment.from_file(todecode , sucka) 
+	AudioSegment.converter = "D:\\ffmpeg\\ffmpeg\\bin\\ffmpeg.exe"
+	if sucka=='mp3':
+		myaudio=AudioSegment.from_mp3(todecode)
+	else:
+		myaudio = AudioSegment.from_file(todecode , sucka) 
 	chunk_length_ms = 60000 # pydub calculates in millisec
 	chunks = make_chunks(myaudio, chunk_length_ms) #Make chunks of one sec
 
@@ -2008,211 +2775,213 @@ def advanced_settings():
 					num=30.5
 				le=num*15
 				le2=le/16
-				win8 = GraphWin("Trained Words", 400, le)
-				win8.setBackground('white')
-				win8.setCoords(0.0,le2,12.0,0.0)
-				tit=Text(Point(6,1.3),'Trained Words:')
-				tit.setSize(25)
-				tit.setStyle('bold')
-				tit.setFace('courier')
-				tit.setTextColor('red')
-				tit.draw(win8)
-	
-				en=Text(Point(6,le2-2),'Save and Close')
-				enbttn=Rectangle(Point(4.2,le2-2.6),Point(7.8,le2-1.4))
-				enbttn.setFill('green')
-				enbttn.draw(win8)
-				en.draw(win8)
-
-
-				c1=Line(Point(10.3,3.5-.6),Point(11,3.5+.6))
-
-
-
-				c2=Line(Point(10.3,5.5-.6),Point(11,5.5+.6))
-
-
-				c3=Line(Point(10.3,7.5-.6),Point(11,7.5+.6))
-
-
-				c4=Line(Point(10.3,9.5-.6),Point(11,9.5+.6))
-
-
-				c5=Line(Point(10.3,11.5-.6),Point(11,11.5+.6))
-
-
-				c6=Line(Point(10.3,13.5-.6),Point(11,13.5+.6))
-
-
-				c7=Line(Point(10.3,15.5-.6),Point(11,15.5+.6))
-
-
-				c8=Line(Point(10.3,17.5-.6),Point(11,17.5+.6))
-
-
-				c9=Line(Point(10.3,19.5-.6),Point(11,19.5+.6))
-
-
-				c10=Line(Point(10.3,21.5-.6),Point(11,21.5+.6))
-
-
-				c11=Line(Point(10.3,23.5-.6),Point(11,23.5+.6))
-
-
-
-
-
-
-
-
-
-
-				for j in range(0,11):
-					if j>len(tool)-1:
-						break
-					if j==0:
-						ht=3.5
-
-					else:
-						ht=ht+2
-					bht=ht+.6
-					bbht=ht-.6
-					Text(Point(5.1,ht),tool[j]).draw(win8)
-					Rectangle(Point(10.3,bht),Point(11,bbht)).draw(win8)
-
-					if j==0:
-						if peep[1]==1:
-							c1.draw(win8)
-
-					if j==1:
-						if peep[2]==1:
-							c2.draw(win8)
-
-					if j==2:
-						if peep[3]==1:
-							c3.draw(win8)
-
-					if j==3 and peep[4]==1:
-						
-						c4.draw(win8)
-
-					if j==4 and peep[5]==1:
-						c5.draw(win8)
-
-					if j==5 and peep[6]==1:
-						c6.draw(win8)
-
-					if j==6 and peep[7]==1:
-						c7.draw(win8)
-
-					if j==7 and peep[8]==1:
-						c8.draw(win8)
-
+				try:
+					win8 = GraphWin("Trained Words", 400, le)
+					win8.setBackground('white')
+					win8.setCoords(0.0,le2,12.0,0.0)
+					tit=Text(Point(6,1.3),'Trained Words:')
+					tit.setSize(25)
+					tit.setStyle('bold')
+					tit.setFace('courier')
+					tit.setTextColor('red')
+					tit.draw(win8)
 		
-					if j==8 and peep[9]==1:
-						c9.draw(win8)
-		
-					if j==9 and peep[10]==1:
-						c10.draw(win8)
+					en=Text(Point(6,le2-2),'Save and Close')
+					enbttn=Rectangle(Point(4.2,le2-2.6),Point(7.8,le2-1.4))
+					enbttn.setFill('green')
+					enbttn.draw(win8)
+					en.draw(win8)
 
-					if j==10 and peep[11]==1:
-						c11.draw(win8)
 
-				potluck=True
+					c1=Line(Point(10.3,3.5-.6),Point(11,3.5+.6))
 
-				while potluck:
-					carrots=win8.getMouse()
-					if 10.3<=carrots.getX()<=11:
-						if 3.5-.6<=carrots.getY()<=3.5+.6:
-							if peep[1]==0:
+
+
+					c2=Line(Point(10.3,5.5-.6),Point(11,5.5+.6))
+
+
+					c3=Line(Point(10.3,7.5-.6),Point(11,7.5+.6))
+
+
+					c4=Line(Point(10.3,9.5-.6),Point(11,9.5+.6))
+
+
+					c5=Line(Point(10.3,11.5-.6),Point(11,11.5+.6))
+
+
+					c6=Line(Point(10.3,13.5-.6),Point(11,13.5+.6))
+
+
+					c7=Line(Point(10.3,15.5-.6),Point(11,15.5+.6))
+
+
+					c8=Line(Point(10.3,17.5-.6),Point(11,17.5+.6))
+
+
+					c9=Line(Point(10.3,19.5-.6),Point(11,19.5+.6))
+
+
+					c10=Line(Point(10.3,21.5-.6),Point(11,21.5+.6))
+
+
+					c11=Line(Point(10.3,23.5-.6),Point(11,23.5+.6))
+
+
+
+
+
+
+
+
+
+
+					for j in range(0,11):
+						if j>len(tool)-1:
+							break
+						if j==0:
+							ht=3.5
+
+						else:
+							ht=ht+2
+						bht=ht+.6
+						bbht=ht-.6
+						Text(Point(5.1,ht),tool[j]).draw(win8)
+						Rectangle(Point(10.3,bht),Point(11,bbht)).draw(win8)
+
+						if j==0:
+							if peep[1]==1:
 								c1.draw(win8)
-								peep[1]=1
-							else:
-								c1.undraw()
-								peep[1]=0
-						if 5.5-.6<=carrots.getY()<=5.5+.6:
-							if peep[2]==0:
+
+						if j==1:
+							if peep[2]==1:
 								c2.draw(win8)
-								peep[2]=1
-							else:
-								c2.undraw()
-								peep[2]=0
-						if 7.5-.6<=carrots.getY()<=7.5+.6:
-							if peep[3]==0:
+
+						if j==2:
+							if peep[3]==1:
 								c3.draw(win8)
-								peep[3]=1
-							else:
-								c3.undraw()
-								peep[3]=0
-						if 9.5-.6<=carrots.getY()<=9.5+.6:
-							if peep[4]==0:
-								c4.draw(win8)
-								peep[4]=1
-							else:
-								c4.undraw()
-								peep[4]=0
-						if 11.5-.6<=carrots.getY()<=11.5+.6:
-							if peep[5]==0:
-								c5.draw(win8)
-								peep[5]=1
-							else:
-								c5.undraw()
-								peep[5]=0
-						if 13.5-.6<=carrots.getY()<=13.5+.6:
-							if peep[6]==0:
-								c6.draw(win8)
-								peep[6]=1
-							else:
-								c6.undraw()
-								peep[6]=0
-						if 15.5-.6<=carrots.getY()<=15.5+.6:
-							if peep[7]==0:
-								c7.draw(win8)
-								peep[7]=1
-							else:
-								c7.undraw()
-								peep[7]=0
-						if 17.5-.6<=carrots.getY()<=17.5+.6:
-							if peep[8]==0:
-								c8.draw(win8)
-								peep[8]=1
-							else:
-								c6.undraw()
-								peep[8]=0
-						if 19.5-.6<=carrots.getY()<=19.5+.6:
-							if peep[9]==0:
-								c9.draw(win8)
-								peep[9]=1
-							else:
-								c9.undraw()
-								peep[9]=0
-						if 21.5-.6<=carrots.getY()<=21.5+.6:
-							if peep[10]==0:
-								c10.draw(win8)
-								peep[10]=1
-							else:
-								c6.undraw()
-								peep[10]=0
-						if 23.5-.6<=carrots.getY()<=23.5+.6:
-							if peep[11]==0:
-								c11.draw(win8)
-								peep[11]=1
-							else:
-								c11.undraw()
-								peep[11]=0
-					if 4.2<=carrots.getX()<=7.8 and le2-2.6<=carrots.getY()<=le2-1.4:
-						potluck=False
 
-					chdir('./bin')
-					upp=open('prefersett.txt','w')
-					for i in range(0,len(peep)):
-						upp.write(str(peep[i])+'\n')
+						if j==3 and peep[4]==1:
+							
+							c4.draw(win8)
+
+						if j==4 and peep[5]==1:
+							c5.draw(win8)
+
+						if j==5 and peep[6]==1:
+							c6.draw(win8)
+
+						if j==6 and peep[7]==1:
+							c7.draw(win8)
+
+						if j==7 and peep[8]==1:
+							c8.draw(win8)
+
 			
-					upp.close()
-					chdir('../')
+						if j==8 and peep[9]==1:
+							c9.draw(win8)
+			
+						if j==9 and peep[10]==1:
+							c10.draw(win8)
 
-				win8.close()
+						if j==10 and peep[11]==1:
+							c11.draw(win8)
 
+					potluck=True
+
+					while potluck:
+						carrots=win8.getMouse()
+						if 10.3<=carrots.getX()<=11:
+							if 3.5-.6<=carrots.getY()<=3.5+.6:
+								if peep[1]==0:
+									c1.draw(win8)
+									peep[1]=1
+								else:
+									c1.undraw()
+									peep[1]=0
+							if 5.5-.6<=carrots.getY()<=5.5+.6:
+								if peep[2]==0:
+									c2.draw(win8)
+									peep[2]=1
+								else:
+									c2.undraw()
+									peep[2]=0
+							if 7.5-.6<=carrots.getY()<=7.5+.6:
+								if peep[3]==0:
+									c3.draw(win8)
+									peep[3]=1
+								else:
+									c3.undraw()
+									peep[3]=0
+							if 9.5-.6<=carrots.getY()<=9.5+.6:
+								if peep[4]==0:
+									c4.draw(win8)
+									peep[4]=1
+								else:
+									c4.undraw()
+									peep[4]=0
+							if 11.5-.6<=carrots.getY()<=11.5+.6:
+								if peep[5]==0:
+									c5.draw(win8)
+									peep[5]=1
+								else:
+									c5.undraw()
+									peep[5]=0
+							if 13.5-.6<=carrots.getY()<=13.5+.6:
+								if peep[6]==0:
+									c6.draw(win8)
+									peep[6]=1
+								else:
+									c6.undraw()
+									peep[6]=0
+							if 15.5-.6<=carrots.getY()<=15.5+.6:
+								if peep[7]==0:
+									c7.draw(win8)
+									peep[7]=1
+								else:
+									c7.undraw()
+									peep[7]=0
+							if 17.5-.6<=carrots.getY()<=17.5+.6:
+								if peep[8]==0:
+									c8.draw(win8)
+									peep[8]=1
+								else:
+									c6.undraw()
+									peep[8]=0
+							if 19.5-.6<=carrots.getY()<=19.5+.6:
+								if peep[9]==0:
+									c9.draw(win8)
+									peep[9]=1
+								else:
+									c9.undraw()
+									peep[9]=0
+							if 21.5-.6<=carrots.getY()<=21.5+.6:
+								if peep[10]==0:
+									c10.draw(win8)
+									peep[10]=1
+								else:
+									c6.undraw()
+									peep[10]=0
+							if 23.5-.6<=carrots.getY()<=23.5+.6:
+								if peep[11]==0:
+									c11.draw(win8)
+									peep[11]=1
+								else:
+									c11.undraw()
+									peep[11]=0
+						if 4.2<=carrots.getX()<=7.8 and le2-2.6<=carrots.getY()<=le2-1.4:
+							potluck=False
+
+						chdir('./bin')
+						upp=open('prefersett.txt','w')
+						for i in range(0,len(peep)):
+							upp.write(str(peep[i])+'\n')
+				
+						upp.close()
+						chdir('../')
+
+					win8.close()
+				except:
+					pass
 
 
 		if peep[12]==0:
@@ -2566,6 +3335,13 @@ AS.draw(win)
 ASbutton.draw(win)
 
 
+##################### TRACKING BUTTON ###########################
+Tbutton=Text(Point(10,0.4),'Tracking')
+Track=Rectangle(Point(9.4,0.1),Point(10.67,0.8))
+Track.setFill('green')
+Track.draw(win)
+Tbutton.draw(win)
+
 
 
 
@@ -2700,6 +3476,13 @@ totrain=''
 while h==0:
 	p1=win.getMouse()
 	
+	Track=Rectangle(Point(9.4,0.1),Point(10.67,0.8))
+	######### PRESS TRACKING BUTTON ################
+	if 9.4<=p1.getX()<=10.67 and 0.1<=p1.getY()<=0.8:
+		try:
+			tracker()
+		except:
+			pass
 	
 	####### PRESS BROWSE BUTTON ######
 	if 7.9<=p1.getX()<=9.1:
@@ -2731,6 +3514,12 @@ while h==0:
 	
 	######### PRESS TRAIN BUTTON ##########
 	if 4<=p1.getX()<=6.7 and 10.5<=p1.getY()<=12.2:
+		####################################
+		###### UPDATE TRACKING DATA ########
+		####################################
+		
+
+		
 	
 		######### CHECK IF FILE EXISTS ##############
 		#totrain=todo
@@ -2904,6 +3693,7 @@ while h==0:
 				try:
 					ender=trainer(totrain,trw.getText())
 					win2.close()
+					
 				except:
 					poo3=1
 					pass
@@ -2963,6 +3753,10 @@ while h==0:
 	
 	##### PRESSED FIND MY TIMES BUTTON ########
 	if 4<=p1.getX()<=6.7 and 18<=p1.getY()<=20:
+		now=datetime.datetime.now()
+		dater=str(now.month)+'-'+str(now.day)+'-'+str(now.year)
+		
+		
 				
 
 
@@ -3111,12 +3905,13 @@ while h==0:
 			pooppyy=0
 			yoyoman=True
 			while yoyoman:
-				try:
-					W,S,E,P,WW,LW=TheGame(todecode)
-					win2.close()
-				except:
-					pooppyy=1
-					pass
+				# fix after testing
+				#try:
+				W,S,E,P,WW,LW=TheGame(todecode)
+					#win2.close()
+				#except:
+					#pooppyy=1
+					#pass
 				if pooppyy==1:
 					l123=str(todecode).split('\\')
 					
@@ -3180,6 +3975,13 @@ while h==0:
 
 				AWT=AWT*0.01
 				ACP=ACP*0.01
+				l123=str(todecode).split('\\')
+				fn, dt, wttr,cptr=buildtrack()
+				dt.append(dater)
+				fn.append(l123[len(l123)-1])
+				wttr.append(AWT)
+				cptr.append(ACP)
+				updata(fn,dt,wttr,cptr)
 
 
 				Text(Point(5.6,22.1),str(AWT)+' seconds').draw(win)
