@@ -1937,8 +1937,24 @@ def Doit(todecode):
 			if es!='':
 				tool.append(es)
 		datafile.close()
-	
+		
+		chdir('../')
+		chdir('../')
+		
+		chdir('./bin/LM_data')
+		filly=open('words.txt')
+		wolly=[]
+		for line in filly:
+			ff100=line.split('\n')
+			pll=ff100[0]
+			wolly.append(pll)
+		filly.close()
 
+		chdir('../')
+		chdir('../')
+		
+		chdir('./training_data/speech_training')
+		
 		for i in range(0,len(tool)):
 			if settings[i+1]==1:
 				da=open(tool[i]+'.txt','r')
@@ -1952,8 +1968,13 @@ def Doit(todecode):
 					hell.append(s)
 				kk=0
 				for k in hell:
-					decoder.add_word(tool[i]+'('+str(5+kk)+')',k,True)
-					kk=kk+1
+					if tool[i] not in wolly and kk==0:
+						decoder.add_word(tool[i],k,True)
+						kk=kk+1
+					else:
+						print(tool[i])
+						decoder.add_word(tool[i]+'('+str(5+kk)+')',k,True)
+						kk=kk+1
 				da.close()
 					
 		chdir('../')
@@ -3246,6 +3267,33 @@ def advanced_settings():
 					peep[13]=too
 					cm.setText('Current Model: '+peep[13])
 					win22.close()
+					
+					chdir('./bin/LM_data')
+					#update words#
+					fil=open(peep[13]+'.dic','r')
+
+					W=[]
+					for line in fil:
+						#print(line)
+						#print(line.split(' '))
+						one=line.split(' ')
+						two=str(one[0])
+						three=two.split('\t')
+						four=three[0].split('(')
+						five=four[0]
+						if five not in W:
+							W.append(five)
+						
+							print(five)
+							
+					fil2=open('words.txt','w')
+					for w in W:
+						fil2.write(w+'\n')
+						
+					fil.close()
+					fil2.close()
+					chdir('../')
+					chdir('../')
 				
 			
 
@@ -3905,13 +3953,13 @@ while h==0:
 			pooppyy=0
 			yoyoman=True
 			while yoyoman:
-				# fix after testing
-				#try:
-				W,S,E,P,WW,LW=TheGame(todecode)
-					#win2.close()
-				#except:
-					#pooppyy=1
-					#pass
+				
+				try:
+					W,S,E,P,WW,LW=TheGame(todecode)
+					win2.close()
+				except:
+					pooppyy=1
+					pass
 				if pooppyy==1:
 					l123=str(todecode).split('\\')
 					
@@ -3956,7 +4004,7 @@ while h==0:
 				
 
 			if pooppyy==0:
-				h=1
+				#h=1
 				CP=['CLARIFICATION', 'CLARIFICATIONS','CLARIFY','QUESTION','QUESTIONS',str(tcp.getText())]
 				WT=['WAIT',str(twt.getText())]
 
@@ -3993,7 +4041,7 @@ while h==0:
 				Text(Point(9.05,23.1),str(countCP)+' times/class').draw(win)
 
 
-				tmbutton.setText('Quit')
+				#tmbutton.setText('Quit')
 
 
 
