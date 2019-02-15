@@ -132,7 +132,7 @@ Once this has gone through with no errors you can run the file from command line
 ```
 sudo python STAR.pyw
 ```
-notice we suggest you run the program with root permission as S.T.A.R. needs to make quite a few temporary files and depending on your settings it might require require root permission.
+notice we suggest you run the program with root permission as S.T.A.R. needs to make quite a few temporary files and depending on your settings it might require root permission.
 
 
 
