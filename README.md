@@ -35,13 +35,18 @@ Supported Platforms
 - Ubuntu 14.10
 
 Installing (JAVA VERSION) on Windows/Linux
------------------- 
+------------------
+
+Windows
+-------------------
 To install the Java version of S.T.A.R. for Windows one only needs to download the .jar file from [here](https://www.sc.edu/about/offices_and_divisions/cte/about/news/2018/gta_teaching_resource_grant_2018.php) with the correct operating system.
 That is if you are using a Windows machine you need to download the STAR_Windows.jar file.
 
 Then once you have the program if JAVA is correctly configured on your machine you will need only double click the file to run the program.
 
-To install the Java version of S.T.A.R. for Ubuntu one only need to download the .jar file from [here](https://www.sc.edu/about/offices_and_divisions/cte/about/news/2018/gta_teaching_resource_grant_2018.php) with the correct operating system.
+Linux
+-------------------
+To install the Java version of S.T.A.R. for a Linux based machine (such as Ubuntu) one only need to download the .jar file from [here](https://www.sc.edu/about/offices_and_divisions/cte/about/news/2018/gta_teaching_resource_grant_2018.php) with the correct operating system.
 That is if you are using a Linux machine (like Ubuntu) you need to download the STAR_linux.jar file.
 
 Make sure that you have the latest version of Java by using the apt function in command line then navigate to the location of the file then use:
