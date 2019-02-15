@@ -1,7 +1,7 @@
 
 from pydub import AudioSegment
 from pocketsphinx.pocketsphinx import *
-from sphinxbase.sphinxbase import *
+#from sphinxbase.sphinxbase import *
 from os import environ,path,chdir,remove
 from pydub.utils import make_chunks
 import mechanize
